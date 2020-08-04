@@ -2,6 +2,7 @@ class HashTableEntry:
     """
     Linked List hash table key/value pair
     """
+
     def __init__(self, key, value):
         self.key = key
         self.value = value
@@ -20,9 +21,9 @@ class HashTable:
     Implement this.
     """
 
-    def __init__(self, capacity):
-        # Your code here
-
+    def __init__(self, capacity=MIN_CAPACITY):
+        self.capacity = capacity
+        self.storage = [None] * self.capacity
 
     def get_num_slots(self):
         """
@@ -34,8 +35,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
+        return self.storage
 
     def get_load_factor(self):
         """
@@ -45,35 +45,34 @@ class HashTable:
         """
         # Your code here
 
-
     def fnv1(self, key):
-        """
-        FNV-1 Hash, 64-bit
-
-        Implement this, and/or DJB2.
-        """
-
-        # Your code here
-
+        # perhaps later research this
+        pass
 
     def djb2(self, key):
-        """
-        DJB2 hash, 32-bit
-
-        Implement this, and/or FNV-1.
-        """
-        # Your code here
-
+        # research later to get better understanding
+        # hash = 5381
+        # for x in key:
+        #     hash = ((hash << 5) + hash) + ord(x)
+        # return hash & 0xFFFFFFFF
+        hash = 5381
+        for c in key:
+            hash = (hash * 33) + ord(c)
+        return hash
 
     def hash_index(self, key):
         """
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
+        # return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
+        """day one"""
+        # Your code here
+        self.storage[self.hash_index(key)] = value
+
         """
         Store the value with the given key.
 
@@ -81,10 +80,15 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
 
     def delete(self, key):
+        """day one"""
+        if self.storage[self.hash_index(key)] == None:
+            print("DOES NOT EXIST")
+
+        else:
+            self.storage[self.hash_index(key)] = None
+
         """
         Remove the value stored with the given key.
 
@@ -92,19 +96,21 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
-
 
     def get(self, key):
-        """
+        if self.storage[self.hash_index(key)] == None:
+            print("DOES NOT EXIST")
+
+        else:
+            return self.storage[self.hash_index(key)]
+
+    """
         Retrieve the value stored with the given key.
 
         Returns None if the key is not found.
 
         Implement this.
-        """
-        # Your code here
-
+    """
 
     def resize(self, new_capacity):
         """
@@ -114,7 +120,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
 
 if __name__ == "__main__":
@@ -151,3 +156,21 @@ if __name__ == "__main__":
         print(ht.get(f"line_{i}"))
 
     print("")
+
+
+tab = HashTable()
+
+print(tab.storage)  # INITIAL EMPTY ARRAY
+tab.put("billy", 24)
+tab.put("harper", 7)
+print(tab.storage)  # with family names and ages
+
+print(tab.get('billy'))
+print(tab.get('harper'))  # gets specific item
+
+
+tab.delete("billy")
+tab.delete("billy2222")
+tab.delete("harper")
+
+print(tab.storage)
