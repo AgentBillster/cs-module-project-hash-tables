@@ -1,4 +1,4 @@
-class HashTableEntry:
+class Node:
     """
     Linked List hash table key/value pair
     """
@@ -9,7 +9,23 @@ class HashTableEntry:
         self.next = None
 
 
-# Hash table can't have fewer than this many slots
+class LinkedList:
+    def __init__(self, head):
+        self.head = head
+
+    def add_or_replace(self, key, value):
+
+        while self.head is not None:
+
+            if self.head.key == key:
+                self.head.value = value
+            self.head = self.head.next
+
+        newNode = Node(key, value)
+        newNode.next = self.head
+        self.head = newNode
+
+
 MIN_CAPACITY = 8
 
 
@@ -69,9 +85,13 @@ class HashTable:
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
-        """day one"""
-        # Your code here
-        self.storage[self.hash_index(key)] = value
+        index = self.hash_index(key)
+        newList = LinkedList(Node(key, value))
+
+        if self.storage[index] == None:
+            self.storage[index] = newList
+        else:
+            self.storage[index].add_or_replace(key, value)
 
         """
         Store the value with the given key.
